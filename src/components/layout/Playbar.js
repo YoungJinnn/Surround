@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Grid, Slider } from "@mui/material";
 import { styled, darken } from "@mui/material/styles";
 import album from "img/album.png";
@@ -39,6 +39,19 @@ const Playbar = () => {
   const [audio, setAudio] = useState("");
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom);
   const audioNode = useRef();
+
+  const [playRate, setPlayRate] = useState(0);
+  const [volume, setVolume] = useState(30);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPlayRate(
+        (audioNode.current.currentTime / audioNode.current.duration) * 100
+      );
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  });
 
   return (
     <>
@@ -100,9 +113,21 @@ const Playbar = () => {
             alignItems="center"
             sx={{ display: "flex", flexDirection: "row" }}
           >
-            <div style={{ marginRight: "15px" }}>00:00</div>
-            <CustomizedSlider defaultValue={30} />
-            <div style={{ marginLeft: "15px" }}>10:00</div>
+            <div style={{ marginRight: "15px" }}>
+              {audioNode.current?.currentTime
+                ? new Date(audioNode.current.currentTime * 1000)
+                    .toISOString()
+                    .slice(14, 19)
+                : "-:--"}
+            </div>
+            <CustomizedSlider value={playRate} />
+            <div style={{ marginLeft: "15px" }}>
+              {audioNode.current?.duration
+                ? new Date(audioNode.current.duration * 1000)
+                    .toISOString()
+                    .slice(14, 19)
+                : "-:--"}
+            </div>
           </Grid>
           <Grid
             item
@@ -131,7 +156,6 @@ const Playbar = () => {
                 style={{ height: "100%", cursor: "pointer" }}
                 onClick={async () => {
                   console.log("audionode current", audioNode.current);
-                  // audioNode.current.src = null;
                   audioNode.current.pause();
                   setIsPlaying(false);
                 }}
@@ -156,6 +180,9 @@ const Playbar = () => {
                     setAudio(URL.createObjectURL(blob));
                   } else audioNode.current.play();
                   setIsPlaying(true);
+                  console.log(audioNode.current.duration);
+                  console.log(audioNode.current.currentTime);
+                  console.log(audioNode.current.volume);
                 }}
               />
             )}
@@ -186,7 +213,7 @@ const Playbar = () => {
               alt="icon_Volume"
               style={{ height: "90%", marginLeft: "60px" }}
             />
-            <CustomizedSlider1 defaultValue={30} />
+            <CustomizedSlider1 defaultValue={volume} />
           </Grid>
         </Grid>
       </Grid>
