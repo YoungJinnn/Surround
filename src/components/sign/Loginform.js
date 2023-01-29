@@ -55,9 +55,9 @@ const Loginform = (props) => {
                 <span sx={{fontSize: "16px", fontWeight: "bold"}}>Sign in with kakaotalk</span>
               </a>
               <p style={{zIndex: "1"}}>
-                아직 회원이 아니신가요?{" "}
+                Don't have an account?{" "}
                 <Link onClick={() => {navigate("/login/signup");}}>
-                  회원가입
+                  Sign Up
                 </Link>
               </p>
             </Grid>
