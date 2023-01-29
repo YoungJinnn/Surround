@@ -120,7 +120,14 @@ const Playbar = () => {
                     .slice(14, 19)
                 : "-:--"}
             </div>
-            <CustomizedSlider value={playRate} />
+            <CustomizedSlider
+              value={playRate}
+              onChange={(e, nextValue) => {
+                setPlayRate(nextValue);
+                audioNode.current.currentTime =
+                  (audioNode.current.duration * playRate) / 100;
+              }}
+            />
             <div style={{ marginLeft: "15px" }}>
               {audioNode.current?.duration
                 ? new Date(audioNode.current.duration * 1000)
