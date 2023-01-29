@@ -41,7 +41,7 @@ const Playbar = () => {
   const audioNode = useRef();
 
   const [playRate, setPlayRate] = useState(0);
-  const [volume, setVolume] = useState(30);
+  const [volume, setVolume] = useState(100);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -187,8 +187,7 @@ const Playbar = () => {
                     setAudio(URL.createObjectURL(blob));
                   } else audioNode.current.play();
                   setIsPlaying(true);
-                  console.log(audioNode.current.duration);
-                  console.log(audioNode.current.currentTime);
+
                   console.log(audioNode.current.volume);
                 }}
               />
@@ -220,7 +219,13 @@ const Playbar = () => {
               alt="icon_Volume"
               style={{ height: "90%", marginLeft: "60px" }}
             />
-            <CustomizedSlider1 defaultValue={volume} />
+            <CustomizedSlider1
+              value={volume}
+              onChange={(e, nextValue) => {
+                setVolume(nextValue);
+                audioNode.current.volume = volume / 100;
+              }}
+            />
           </Grid>
         </Grid>
       </Grid>
