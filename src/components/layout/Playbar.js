@@ -130,7 +130,9 @@ const Playbar = () => {
                 alt="pausebutton_3"
                 style={{ height: "100%", cursor: "pointer" }}
                 onClick={async () => {
-                  audioNode.current.src = null;
+                  console.log("audionode current", audioNode.current);
+                  // audioNode.current.src = null;
+                  audioNode.current.pause();
                   setIsPlaying(false);
                 }}
               />
@@ -140,17 +142,19 @@ const Playbar = () => {
                 alt="playbutton_3"
                 style={{ height: "100%", cursor: "pointer" }}
                 onClick={async () => {
-                  const res = await axios.get(
-                    `${process.env.REACT_APP_SERVER}/api/songs/download?title=wildflower`,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${cookies.loginkey}`,
-                      },
-                      responseType: "blob",
-                    }
-                  );
-                  const blob = new Blob([res.data], { type: "audio/mpeg" });
-                  setAudio(URL.createObjectURL(blob));
+                  if (!audio) {
+                    const res = await axios.get(
+                      `${process.env.REACT_APP_SERVER}/api/songs/download?title=wildflower`,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${cookies.loginkey}`,
+                        },
+                        responseType: "blob",
+                      }
+                    );
+                    const blob = new Blob([res.data], { type: "audio/mpeg" });
+                    setAudio(URL.createObjectURL(blob));
+                  } else audioNode.current.play();
                   setIsPlaying(true);
                 }}
               />
